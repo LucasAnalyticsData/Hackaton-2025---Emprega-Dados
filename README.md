@@ -58,14 +58,6 @@ A etapa final do ETL consiste em disponibilizar os dados transformados de forma 
 
 ---
 
-## 📊 Arquitetura do Sistema
-
-Nosso sistema foi projetado com uma arquitetura clara e modular, garantindo escalabilidade e manutenibilidade:
-
-![Arquitetura do Pipeline ETL](https://private-us-east-1.manuscdn.com/sessionFile/PVOa7wBAt4M65kts0N73c5/sandbox/7o0gcwmPnSOV0XoFtfZYnI-images_1755708002801_na1fn_L2hvbWUvdWJ1bnR1L2NvbXBsZXRlX3BpcGVsaW5lX2RpYWdyYW0.png?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvUFZPYTd3QkF0NE02NWt0czBONzNjNS9zYW5kYm94LzdvMGdjd21QblNPVjBYb0Z0ZlpZbkktaW1hZ2VzXzE3NTU3MDgwMDI4MDFfbmExZm5fTDJodmJXVXZkV0oxYm5SMUwyTnZiWEJzWlhSbFgzQnBjR1ZzYVc1bFgyUnBZV2R5WVcwLnBuZyIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc5ODc2MTYwMH19fV19&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=kzmMlNr9VnvQPsrnJL5pqe2XGmV4DVO3MOHIBCwrMF5zL3Ipk247gz6-9jbaRgyp-FA~Q1djm-rn5Celj~Gieu5udhbtoP89EcxHyn2C2~U7RKsHcCe--z8mqB~6bSz4OoXhantk5sHILB9cHaptdMr61aqXjQpLkfQU-MkeuctlfRE8rW6vKWziUlFujzAcV9TUySGDFIz9cySEwj-G1bCRHTNf0UG3GUIHEo2F~OETHYYlMvtyhUBVCRk7o-v9fWGL1kWrSb-kf5QoAa11SaTr5aRbpZAelfTM-Z8ByRAo18knyJ5-yErqSMy4~GHrXnkO071ul6v5-M3lw~2aOQ__)
-
-*Diagrama de fluxo do pipeline ETL, destacando as fontes de dados, a API Flask e a camada de BI.*
-
 ### 🏗️ Componentes da Arquitetura
 
 | Camada | Componente | Responsabilidade | Tecnologia |
@@ -276,58 +268,5 @@ Essas competências são fundamentais para atuar em ambientes de dados desafiado
 
 ---
 
-
-
-## 🧠 Motivadores Técnicos por Trás da Arquitetura
-
-Nosso pipeline foi construído sobre princípios sólidos de Engenharia de Dados, garantindo não apenas a funcionalidade, mas também a robustez, escalabilidade e manutenibilidade. A tabela abaixo detalha as motivações técnicas por trás de cada escolha arquitetural:
-
-| ✅ Princípio | 💡 Motivação Técnica | Domínio Técnico Demonstrado |
-| :-------- | :------------------- | :-------------------------- |
-| **🔐 Schema Enforcement** | Garante que os dados lidos das fontes estejam consistentes com o modelo esperado, prevenindo erros e inconsistências. | Governança de Dados, Qualidade de Dados, Prevenção de Erros |
-| **🧹 Limpeza de Dados** | Remoção de duplicatas e nulos assegura qualidade mínima logo na camada de ingestão, otimizando processamentos futuros. | Pré-processamento de Dados, Otimização de Performance, Qualidade de Dados |
-| **⏱️ Rastreabilidade** | Inclusão de `data_ingestao` e outros metadados para auditoria e suporte ao Time Travel (se aplicável), permitindo a recuperação de estados anteriores dos dados. | Auditoria de Dados, Versionamento de Dados, Recuperação de Desastres |
-| **🔁 Upsert via MERGE** | Carregamento incremental e seguro dos dados com `MERGE INTO`, mantendo a integridade e performance em cenários de dados em constante mudança. | Processamento Incremental, Idempotência, Otimização de Ingestão |
-| **🧬 Evolução de Schema** | `mergeSchema` garante flexibilidade para alterações estruturais futuras nas fontes de dados sem quebrar o pipeline. | Flexibilidade de Schema, Manutenibilidade, Resiliência a Mudanças |
-| **📁 Particionamento** | Organiza fisicamente os dados por chaves específicas (ex: `data_ingestao`), otimizando a leitura e escrita em grandes volumes. | Otimização de Armazenamento, Performance de Consulta, Gerenciamento de Dados |
-| **🧠 Auto-recuperação** | Registro da tabela no catálogo evita falhas comuns como `TABLE_OR_VIEW_NOT_FOUND`, garantindo a disponibilidade dos dados. | Resiliência do Pipeline, Gerenciamento de Metadados, Disponibilidade de Dados |
-| **⚙️ Otimizações Delta** | `OPTIMIZE ZORDER BY` e `VACUUM` maximizam performance de consulta e reduzem custo de armazenamento em ambientes Delta Lake. | Otimização de Data Lakehouse, Gerenciamento de Custo, Performance de Leitura |
-
----
-
-
-
-## 📁 Estrutura do Projeto: Modularidade e Organização
-
-O projeto segue uma estrutura modular para facilitar a manutenção e o desenvolvimento, com cada componente tendo uma responsabilidade clara:
-
-```plaintext
-.
-├── app.py                 # 🌐 Endpoints da API Flask e lógica principal de orquestração
-├── sheets.py              # 📄 Módulo de integração com Google Sheets
-├── sheets_cleaner.py      # 🧹 Módulo com funções de limpeza e transformação de dados das planilhas
-├── sharepoint.py          # ☁️ Módulo para download de arquivos Excel do SharePoint
-├── config.py              # ⚙️ Arquivo de configurações gerais e variáveis de ambiente
-├── credentials_sheets.json # 🔑 Arquivo de credenciais de serviço do Google Sheets (local e seguro)
-└── requirements.txt       # 📦 Lista de dependências do projeto para fácil instalação
-```
-
-Esta organização promove a **manutenibilidade**, **escalabilidade** e **colaboração** entre equipes, permitindo que diferentes módulos sejam desenvolvidos e testados de forma independente. 🧑‍💻
-
----
-
-## 🤝 Contribuição
-
-Sua contribuição é muito bem-vinda! Sinta-se à vontade para explorar o código, propor melhorias, abrir **issues** para reportar bugs ou sugerir novas funcionalidades, e enviar **pull requests**. Juntos, podemos aprimorar ainda mais este projeto. ✨
-
----
-
-## 📄 Licença
-
-Este projeto é open-source e foi desenvolvido exclusivamente para fins educacionais e de demonstração durante a Hackathon. Ele serve como um portfólio prático de habilidades em Engenharia de Dados e Desenvolvimento Backend. 🎓
-
----
-
-*Desenvolvido com paixão por dados e engenharia. 💜*
 
 
